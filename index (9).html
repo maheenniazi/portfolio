@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maheen Niazi</title>
+  <meta name="description" content="Maheen Niazi — CS & Applied Math @ UofT. A cool lil tech girl who builds games, AI tools and things that run offline." />
+  <meta name="author" content="Maheen Niazi" />
+  <meta property="og:title" content="Maheen Niazi" />
+  <meta property="og:description" content="CS & Applied Math @ UofT — I build games, AI tools & things from scratch. Come say hi." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,600;1,800&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕷️</text></svg>" />
+</head>
+<body>
+  <canvas id="web-canvas" aria-hidden="true"></canvas>
+  <!-- custom web cursor + trailing strand (JS driven) -->
+  <div id="cursor-web" aria-hidden="true"></div>
+  <canvas id="cursor-trail" aria-hidden="true"></canvas>
+
+  <!-- ============================================================
+       COVER — the "desk" flat-lay landing screen
+       ============================================================ -->
+  <section id="cover" class="cover">
+    <div class="desk">
+      <!-- binder clip top -->
+      <span class="clip" aria-hidden="true"></span>
+
+      <!-- photo-booth film strip (slots for your pics) -->
+      <div class="filmstrip" aria-label="Photo strip">
+        <span class="film-bow" aria-hidden="true"></span>
+        <div class="film-cell" data-slot="cover-1"><span class="slot-hint">photo</span></div>
+        <div class="film-cell" data-slot="cover-2"><span class="slot-hint">photo</span></div>
+        <div class="film-cell" data-slot="cover-3"><span class="slot-hint">photo</span></div>
+      </div>
+
+      <!-- name block -->
+      <div class="cover-name">
+        <span class="cover-first">MAHEEN</span>
+        <span class="cover-last">Niazi</span>
+        <span class="cover-role">developer &middot; portfolio</span>
+      </div>
+
+      <!-- scattered desk objects = interests/charms -->
+      <div class="desk-charms" aria-hidden="true">
+        <span class="charm charm-pen"></span>
+        <span class="charm charm-cord"></span>
+        <span class="charm charm-note" data-charm="music"></span>
+        <span class="charm charm-pick" data-charm="guitar"></span>
+        <span class="charm charm-flag" data-charm="f1"></span>
+        <span class="charm charm-heart" data-charm="locket"></span>
+        <span class="charm charm-spider" data-charm="spider"></span>
+      </div>
+
+      <button id="enter-btn" class="enter-btn">open portfolio <span class="enter-arrow">&rarr;</span></button>
+    </div>
+    <p class="cover-tip">a little desk of mine &mdash; click to come in</p>
+  </section>
+
+  <!-- ============================================================
+       PORTFOLIO — folder-tab interface
+       ============================================================ -->
+  <main id="portfolio" class="portfolio" hidden>
+    <header class="pf-top">
+      <button id="back-cover" class="pf-back" title="Back to cover">&larr; cover</button>
+      <span class="pf-title">Maheen Niazi</span>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light / dark mode" title="Toggle theme">
+        <span class="theme-icon" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <!-- Folder tabs -->
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Portfolio sections">
+      <button class="tab" data-tab="about"     role="tab" aria-selected="true">about me</button>
+      <button class="tab" data-tab="work"      role="tab" aria-selected="false">work</button>
+      <button class="tab" data-tab="skills"    role="tab" aria-selected="false">skills</button>
+      <button class="tab" data-tab="experience" role="tab" aria-selected="false">experience</button>
+      <button class="tab" data-tab="interests" role="tab" aria-selected="false">interests</button>
+      <button class="tab" data-tab="contact"   role="tab" aria-selected="false">contact</button>
+    </nav>
+
+    <!-- Folder body — one panel shows at a time -->
+    <div class="folder" id="folder">
+
+      <!-- ABOUT -->
+      <section class="panel is-active" data-panel="about">
+        <div class="panel-head">
+          <span class="panel-eyebrow">a little</span>
+          <h2 class="panel-title">about <em>me</em></h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-text" id="about-text"></div>
+          <aside class="about-side">
+            <div class="polaroid" data-slot="about-photo"><span class="slot-hint">your photo here</span><span class="polaroid-cap">that's me</span></div>
+            <div class="about-card" id="education-card"></div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- WORK -->
+      <section class="panel" data-panel="work">
+        <div class="panel-head">
+          <span class="panel-eyebrow">some of my</span>
+          <h2 class="panel-title">favourite <em>builds</em></h2>
+        </div>
+        <p class="panel-sub">Stuff I designed &amp; built — mostly from scratch, often offline-first, always a little ambitious.</p>
+        <div class="projects-grid" id="projects-grid"></div>
+      </section>
+
+      <!-- SKILLS -->
+      <section class="panel" data-panel="skills">
+        <div class="panel-head">
+          <span class="panel-eyebrow">my</span>
+          <h2 class="panel-title">toolkit <em>&amp; skills</em></h2>
+        </div>
+        <div class="skills-wrap" id="skills-wrap"></div>
+      </section>
+
+      <!-- EXPERIENCE (+ teaching + leadership + creds) -->
+      <section class="panel" data-panel="experience">
+        <div class="panel-head">
+          <span class="panel-eyebrow">where i've</span>
+          <h2 class="panel-title">worked <em>&amp; grown</em></h2>
+        </div>
+        <h3 class="sub-head">Experience</h3>
+        <div class="timeline" id="experience-timeline"></div>
+        <h3 class="sub-head">Teaching &amp; Mentorship</h3>
+        <div class="timeline" id="teaching-timeline"></div>
+        <h3 class="sub-head">Leadership &amp; Activities</h3>
+        <div class="timeline" id="leadership-timeline"></div>
+        <h3 class="sub-head">Certifications &amp; Awards</h3>
+        <div class="cred-grid">
+          <div class="cred-col">
+            <h4 class="cred-head"><span class="cred-mark" aria-hidden="true"></span>Certifications</h4>
+            <ul id="certs-list" class="cred-list"></ul>
+          </div>
+          <div class="cred-col">
+            <h4 class="cred-head"><span class="cred-mark" aria-hidden="true"></span>Awards</h4>
+            <ul id="awards-list" class="cred-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTERESTS -->
+      <section class="panel" data-panel="interests">
+        <div class="panel-head">
+          <span class="panel-eyebrow">off the clock</span>
+          <h2 class="panel-title">things i <em>love</em></h2>
+        </div>
+        <p class="panel-sub">The stuff that makes me, me. (photo spots are ready whenever you are.)</p>
+        <div class="interests-grid" id="interests-grid"></div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="panel" data-panel="contact">
+        <div class="panel-head">
+          <span class="panel-eyebrow">come</span>
+          <h2 class="panel-title">say <em>hi</em></h2>
+        </div>
+        <p class="panel-sub">Recruiting, collab, or just wanna chat? My inbox is always open.</p>
+        <div class="contact-links" id="contact-links"></div>
+        <p class="contact-foot">designed &amp; coded by Maheen Niazi — made with <span class="heart">&hearts;</span> &amp; a little web-slinging</p>
+      </section>
+
+    </div>
+    <p class="pf-hint">psst &mdash; press <kbd>T</kbd> for the lights &middot; use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> to flip folders</p>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
