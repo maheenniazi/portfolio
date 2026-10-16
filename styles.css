@@ -370,6 +370,10 @@ main { position: relative; z-index: 1; padding: 90px 0 40px; }
 .file:not(.flipped) .file-flip { transition: transform 0.9s var(--spring), height 0.7s var(--ease); }
 .file:hover:not(.flipped) .file-flip { transition: transform 0.25s var(--ease), height 0.7s var(--ease); }
 .file:hover .file-tab { transition-duration: 0.25s; }
+.file.settled .file-flip { transform: none; transform-style: flat; }
+.file.settled .face-back { transform: none; }
+.file.settled .face-front { visibility: hidden; }
+.file.no-anim .file-flip { transition: none !important; }
 /* only the side facing you takes clicks (Safari hit-tests hidden backfaces) */
 .file.flipped .face-front, .file:not(.flipped) .face-back { pointer-events: none; }
 .file.flipped { cursor: auto; }
