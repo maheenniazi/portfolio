@@ -40,7 +40,7 @@ const DATA = {
   education: {
     school: "University of Toronto Mississauga",
     location: "Mississauga, ON",
-    degree: "Honours BSc — Intended Majors: Computer Science & Applied Mathematics",
+    degree: "Honours BSc — Majors: Computer Science & Applied Mathematics",
     date: "Expected 2029",
   },
 
