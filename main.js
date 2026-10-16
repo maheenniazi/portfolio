@@ -48,9 +48,9 @@
     { s: "hibiscus-red", x: 12, y: 93, w: 14, d: 60,  a: "bob", r: 12 },
     { s: "kiss",         x: 32, y: 88, w: 9,  d: 140, a: "bob", r: -14, sm: true },
     { s: "star-silver",  x: 43, y: 93, w: 6,  d: 260, a: "spin3d" },
-    { s: "star-chrome",  x: 68, y: 87, w: 9,  d: 230, a: "spin3d" },
+    { s: "star-felt",    x: 68, y: 87, w: 9,  d: 230, a: "spin3d" },
     { s: "cherries",     x: 83, y: 74, w: 11, d: 200, a: "bob", r: 8 },
-    { s: "cassette",     x: 86, y: 45, w: 8,  d: 40,  a: "bob", r: 14, sm: true },
+    { s: "ball-7",       x: 86, y: 45, w: 8,  d: 40,  a: "bob", r: 14, sm: true },
     { s: "web-heart",    x: 74, y: 60, w: 7,  d: 300, a: "bob", sm: true },
     { s: "tulips",       x: 36, y: 8,  w: 9,  d: 80,  a: "bob", r: -12, sm: true },
     { s: "ticket-lucky", x: 88, y: 92, w: 11, d: 110, r: -8, sm: true },
@@ -61,7 +61,7 @@
       { s: "butterfly",      x: 97, y: 5,  w: 96,  d: 70, a: "flap" },
       { s: "ribbon",         x: 2,  y: 2,  w: 70,  d: 30, r: -10 },
       { s: "hibiscus-cream", x: -2, y: 92, w: 130, d: 50, a: "bob" },
-      { s: "wax-rose",       x: 95, y: 95, w: 84,  d: 90, r: 10 },
+      { s: "locket-open",    x: 95, y: 95, w: 96,  d: 90, r: 10 },
     ],
     work: [
       { s: "spidey-headphones", x: 96, y: 1,  w: 120, d: 90, a: "bob", r: 8 },
@@ -149,10 +149,11 @@
             <button class="file-btn" data-flip aria-label="Open the ${proj.name} file">open file <span>&rarr;</span></button>
           </div>
           <div class="face face-back">
-            <div class="back-top"><span class="file-num sm">${num}</span><span class="back-name">${proj.name}</span>
+            <div class="back-inner"><div class="back-top"><span class="file-num sm">${num}</span><span class="back-name">${proj.name}</span>
               <button class="file-close" data-flip aria-label="Close the ${proj.name} file">&times;</button></div>
             <ul class="file-points">${proj.points.map((x) => `<li>${x}</li>`).join("")}</ul>
             <a class="file-link" href="${proj.repo}" target="_blank" rel="noopener">${ICONS.github} view on github <span>&rarr;</span></a>
+            </div>
           </div>
         </div>`;
       pg.appendChild(card);
@@ -337,16 +338,43 @@
   //  Project files: hover tilt + click to flip open
   // ----------------------------------------------------------
   function files() {
-    $$(".file").forEach((card) => {
+    const cards = $$(".file");
+    // The card grows to fit its description instead of scrolling inside a 3D box.
+    const backHeight = (card) => {
+      const back = $(".face-back", card), cs = getComputedStyle(back);
+      return $(".back-inner", card).offsetHeight + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+    };
+    const setOpen = (card, open) => {
+      if (card.classList.contains("flipped") === open) return;
+      const flip = $(".file-flip", card), front = $(".face-front", card);
+      if (open) {
+        card.dataset.frontH = front.offsetHeight;
+        flip.style.height = card.dataset.frontH + "px";
+        card.classList.add("flipped");
+        requestAnimationFrame(() => (flip.style.height = Math.max(+card.dataset.frontH, backHeight(card)) + "px"));
+      } else {
+        flip.style.height = card.dataset.frontH + "px";
+        card.classList.remove("flipped");
+        setTimeout(() => { if (!card.classList.contains("flipped")) flip.style.height = ""; }, 750);
+      }
+      const focusTarget = open ? $(".file-close", card) : $(".file-btn", card);
+      setTimeout(() => focusTarget.focus({ preventScroll: true }), 350);
+    };
+    cards.forEach((card) => {
       card.addEventListener("click", (e) => {
         if (e.target.closest("a")) return;
-        if (e.target.closest("[data-flip]") || !card.classList.contains("flipped")) {
-          card.classList.toggle("flipped");
-          const focusTarget = card.classList.contains("flipped") ? $(".file-close", card) : $(".file-btn", card);
-          setTimeout(() => focusTarget.focus({ preventScroll: true }), 350);
-        }
+        const flipped = card.classList.contains("flipped");
+        if (e.target.closest(".file-close")) setOpen(card, false);
+        else if (!flipped) setOpen(card, true);
       });
     });
+    // Esc or a click outside closes any open file
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") cards.forEach((c) => setOpen(c, false)); });
+    document.addEventListener("click", (e) => { cards.forEach((c) => { if (!c.contains(e.target)) setOpen(c, false); }); });
+    addEventListener("resize", () => cards.forEach((c) => {
+      if (!c.classList.contains("flipped")) return;
+      $(".file-flip", c).style.height = Math.max(+c.dataset.frontH, backHeight(c)) + "px";
+    }));
     tiltCards($$(".file"), 9);
     tiltCards($$("[data-tilt-card]"), 14);
   }
