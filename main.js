@@ -78,7 +78,7 @@
     experience: [
       { s: "binder-clip",  x: 50, y: -1, w: 120, d: 20 },
       { s: "stamp-maroon", x: 97, y: 16, w: 90,  d: 50, r: 9, sm: true },
-      { s: "locket-444",   x: -2, y: 46, w: 80,  d: 80, a: "swing", sm: true },
+      { s: "wax-heart",    x: -2, y: 46, w: 80,  d: 80, a: "bob", sm: true },
       { s: "swan",         x: 95, y: 82, w: 120, d: 40, a: "bob", sm: true },
       { s: "star-felt",    x: 2,  y: 97, w: 70,  d: 60, a: "spin3d" },
     ],
