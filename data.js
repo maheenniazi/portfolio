@@ -5,6 +5,13 @@
 // ============================================================
 
 const DATA = {
+  // Drop your own pics in assets/photos/ and point a slot at them, e.g.
+  //   about: "assets/photos/me.jpg"
+  // Empty slots show a little "add a pic" hint instead.
+  photos: {
+    about: "",
+  },
+
   profile: {
     name: "Maheen Niazi",
     tagline: "CS & Applied Math @ UofT — I build games, AI tools and little things that run offline and don't break. (and yes, I take Spider-Man way too seriously.)",
@@ -83,6 +90,8 @@ const DATA = {
   projects: [
     {
       name: "Lumora",
+      sticker: "heart-dictionary",
+      color: "#e8c4c8",
       blurb: "RAG Study Assistant",
       stack: ["Python", "LangChain", "ChromaDB", "Ollama", "Docker"],
       repo: "https://github.com/maheenniazi/lumora",
@@ -96,6 +105,8 @@ const DATA = {
     },
     {
       name: "Orbit",
+      sticker: "disco",
+      color: "#d9a7ae",
       blurb: "AI Student Workspace",
       stack: ["Node.js", "Vanilla JS", "OCR", "LLMs"],
       repo: "https://github.com/maheenniazi/orbit",
@@ -110,6 +121,8 @@ const DATA = {
     },
     {
       name: "Turbo Karts",
+      sticker: "ball-8",
+      color: "#e7c7a3",
       blurb: "Multiplayer Racing Game",
       stack: ["JavaScript", "WebGL", "Node.js", "WebSockets", "PWA"],
       repo: "https://github.com/maheenniazi/turbo-karts",
@@ -124,6 +137,8 @@ const DATA = {
     },
     {
       name: "SynCode",
+      sticker: "cassette",
+      color: "#c9bca8",
       blurb: "Collaborative Code Editor",
       stack: ["React", "Monaco", "Node.js", "Express", "Socket.io"],
       repo: "https://github.com/maheenniazi/syncode",
@@ -176,15 +191,15 @@ const DATA = {
     "Honor Roll (2021/22, 2022/23, 2023/24, 2024/25)",
   ],
 
-  // A little personality — rendered as charms on the cover + cards in the Interests folder.
-  // `icon` maps to an inline SVG in main.js (ICONS). `note` is the handwritten caption.
-  // Add a `photo` filename later and it'll slot into the card's photo area.
+  // A little personality — rendered as flip-polaroids in the Interests page.
+  // `sticker` is a file in assets/stickers/ (front of the polaroid). `note` is the handwritten caption.
+  // Add `photo: "assets/photos/xyz.jpg"` to show your own pic instead of the sticker.
   interests: [
-    { icon: "guitar", title: "guitar", note: "always learning a new song (badly, then well)" },
-    { icon: "music",  title: "music",  note: "a playlist for every mood & every project" },
-    { icon: "flag",   title: "formula 1", note: "lights out and away we go — every sunday" },
-    { icon: "tv",     title: "tv & film", note: "comfort rewatches + anything with a plot twist" },
-    { icon: "spider", title: "spider-man", note: "the whole personality, honestly" },
-    { icon: "book",   title: "reading", note: "fantasy, a bit of everything, cozy corners" },
+    { icon: "guitar", sticker: "guitar", title: "guitar", note: "always learning a new song (badly, then well)" },
+    { icon: "music", sticker: "vinyl-red",  title: "music",  note: "a playlist for every mood & every project" },
+    { icon: "flag", sticker: "star-chrome",   title: "formula 1", note: "lights out and away we go — every sunday" },
+    { icon: "tv", sticker: "camera",     title: "tv & film", note: "comfort rewatches + anything with a plot twist" },
+    { icon: "spider", sticker: "spidey-hang", title: "spider-man", note: "the whole personality, honestly" },
+    { icon: "book", sticker: "heart-dictionary",   title: "reading", note: "fantasy, a bit of everything, cozy corners" },
   ],
 };
