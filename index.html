@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maheen Niazi</title>
+  <meta name="description" content="Maheen Niazi — CS & Applied Math @ UofT. A cool lil tech girl who builds games, AI tools and things that run offline." />
+  <meta name="author" content="Maheen Niazi" />
+  <meta property="og:title" content="Maheen Niazi" />
+  <meta property="og:description" content="CS & Applied Math @ UofT — I build games, AI tools & things from scratch. Come say hi." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Caveat:wght@500;700&family=Special+Elite&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/stickers/spidey-badge.webp" />
+</head>
+<body>
+  <div id="loader" class="loader" aria-hidden="true"><img src="assets/stickers/spidey-badge.webp" alt="" /><span>unpacking the scrapbook&hellip;</span></div>
+
+  <canvas id="web-canvas" aria-hidden="true"></canvas>
+  <div id="cursor-web" aria-hidden="true"></div>
+  <canvas id="cursor-trail" aria-hidden="true"></canvas>
+  <div class="scroll-bar" id="scroll-bar" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       HERO — a 3D desk with an envelope you open
+       ============================================================ -->
+  <header id="hero" class="hero">
+    <img class="hero-lace hero-lace-l" src="assets/stickers/lace-red.webp" alt="" aria-hidden="true" />
+    <img class="hero-lace hero-lace-r" src="assets/stickers/lace-white.webp" alt="" aria-hidden="true" />
+    <div class="hero-stripes" aria-hidden="true"></div>
+
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <!-- floating stickers (depth = translateZ in px) -->
+        <div class="float-layer" id="hero-stickers" aria-hidden="true"></div>
+
+        <!-- the envelope -->
+        <div class="envelope-wrap" data-depth="40">
+          <button class="envelope" id="envelope" aria-label="Open Maheen's portfolio">
+            <span class="env-back"></span>
+            <span class="env-letter">
+              <span class="letter-eyebrow">hi, i'm</span>
+              <span class="letter-name">Maheen <em>Niazi</em></span>
+              <span class="letter-role" id="typer" aria-live="polite"></span>
+              <span class="letter-cta">come on in &darr;</span>
+            </span>
+            <span class="env-front">
+              <span class="env-kicker">( developer &mdash; portfolio ) <i>2026</i></span>
+              <span class="env-script">Portfolio</span>
+              <span class="env-sub">maheen's</span>
+            </span>
+            <span class="env-flap"><img class="env-seal" src="assets/stickers/wax-heart.webp" alt="" /></span>
+          </button>
+          <p class="env-hint" id="env-hint">tap the envelope to open</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="#about" class="scroll-cue" aria-label="Scroll to about"><span></span></a>
+  </header>
+
+  <!-- ============================================================
+       NAV — 3D folder tabs
+       ============================================================ -->
+  <nav class="tabs" id="tabs" aria-label="Sections">
+    <a class="tab" href="#about"      data-tab="about">about me</a>
+    <a class="tab" href="#work"       data-tab="work">work</a>
+    <a class="tab" href="#skills"     data-tab="skills">skills</a>
+    <a class="tab" href="#experience" data-tab="experience">experience</a>
+    <a class="tab" href="#interests"  data-tab="interests">interests</a>
+    <a class="tab" href="#contact"    data-tab="contact">contact</a>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light / dark mode" title="Toggle theme (T)"><span class="theme-icon" aria-hidden="true"></span></button>
+  </nav>
+
+  <main>
+    <!-- ABOUT -->
+    <section id="about" class="spread">
+      <div class="page" data-tilt>
+        <div class="page-stickers" data-stickers="about" aria-hidden="true"></div>
+        <div class="page-head">
+          <span class="eyebrow">01 &mdash; a little</span>
+          <h2 class="script-title">about me</h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-photo">
+            <img class="about-clip" src="assets/stickers/lace-frame.webp" alt="" aria-hidden="true" />
+            <div class="polaroid" data-slot="about"><span class="slot-hint">your photo here</span></div>
+            <span class="polaroid-cap">that's me &hearts;</span>
+          </div>
+          <div class="about-text">
+            <div id="about-text"></div>
+            <div class="ticket" id="education-card"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section id="work" class="spread">
+      <div class="page page-dark" data-tilt>
+        <div class="page-stickers" data-stickers="work" aria-hidden="true"></div>
+        <div class="page-head">
+          <span class="eyebrow">02 &mdash; some of my</span>
+          <h2 class="script-title">featured works</h2>
+          <p class="page-sub">Stuff I designed &amp; built &mdash; mostly from scratch, often offline-first, always a little ambitious. <b>Open a file</b> to peek inside.</p>
+        </div>
+        <div class="files" id="projects-grid"></div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="spread">
+      <div class="page" data-tilt>
+        <div class="page-stickers" data-stickers="skills" aria-hidden="true"></div>
+        <div class="page-head">
+          <span class="eyebrow">03 &mdash; my</span>
+          <h2 class="script-title">toolkit</h2>
+          <p class="page-sub">Drag the globe to spin it.</p>
+        </div>
+        <div class="skills-grid">
+          <div class="sphere-wrap">
+            <div class="sphere" id="sphere" aria-hidden="true"></div>
+          </div>
+          <div class="skills-list" id="skills-wrap"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="spread">
+      <div class="page" data-tilt>
+        <div class="page-stickers" data-stickers="experience" aria-hidden="true"></div>
+        <div class="page-head">
+          <span class="eyebrow">04 &mdash; where i've</span>
+          <h2 class="script-title">worked &amp; grown</h2>
+        </div>
+        <h3 class="sub-head">experience</h3>
+        <div class="cards" id="experience-timeline"></div>
+        <h3 class="sub-head">teaching &amp; mentorship</h3>
+        <div class="cards cards-sm" id="teaching-timeline"></div>
+        <h3 class="sub-head">leadership &amp; activities</h3>
+        <div class="cards cards-sm" id="leadership-timeline"></div>
+        <h3 class="sub-head">certifications &amp; awards</h3>
+        <div class="stamps">
+          <div class="stamp-col"><h4>certifications</h4><ul id="certs-list"></ul></div>
+          <div class="stamp-col"><h4>awards</h4><ul id="awards-list"></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERESTS -->
+    <section id="interests" class="spread">
+      <div class="page page-pink" data-tilt>
+        <div class="page-stickers" data-stickers="interests" aria-hidden="true"></div>
+        <div class="page-head">
+          <span class="eyebrow">05 &mdash; off the clock</span>
+          <h2 class="script-title">things i love</h2>
+          <p class="page-sub">Hover (or tap) a polaroid to flip it.</p>
+        </div>
+        <div class="polaroids" id="interests-grid"></div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="spread">
+      <div class="page page-dark" data-tilt>
+        <div class="page-stickers" data-stickers="contact" aria-hidden="true"></div>
+        <div class="page-head">
+          <span class="eyebrow">06 &mdash; come</span>
+          <h2 class="script-title">say hi</h2>
+          <p class="page-sub">Recruiting, collab, or just wanna chat? My inbox is always open.</p>
+        </div>
+        <div class="contact-links" id="contact-links"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-lace" aria-hidden="true"></div>
+    <p>designed &amp; coded by Maheen Niazi &mdash; made with <span class="heart">&hearts;</span> &amp; a little web-slinging</p>
+    <p class="foot-hint">psst &mdash; press <kbd>T</kbd> for the lights</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
