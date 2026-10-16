@@ -90,7 +90,7 @@ const DATA = {
   projects: [
     {
       name: "Lumora",
-      sticker: "heart-dictionary",
+      sticker: "lily",
       color: "#e8c4c8",
       blurb: "RAG Study Assistant",
       stack: ["Python", "LangChain", "ChromaDB", "Ollama", "Docker"],
@@ -105,7 +105,7 @@ const DATA = {
     },
     {
       name: "Orbit",
-      sticker: "disco",
+      sticker: "vinyl",
       color: "#d9a7ae",
       blurb: "AI Student Workspace",
       stack: ["Node.js", "Vanilla JS", "OCR", "LLMs"],
@@ -121,7 +121,7 @@ const DATA = {
     },
     {
       name: "Turbo Karts",
-      sticker: "ball-8",
+      sticker: "star-red",
       color: "#e7c7a3",
       blurb: "Multiplayer Racing Game",
       stack: ["JavaScript", "WebGL", "Node.js", "WebSockets", "PWA"],
