@@ -388,7 +388,7 @@ main { position: relative; z-index: 1; padding: 90px 0 40px; }
 .face-front > * { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .file-num { font-family: var(--serif); font-style: italic; font-size: 3.6rem; line-height: 1; color: var(--maroon); opacity: 0.85; transform: translateZ(30px); }
 .file-num.sm { font-size: 1.8rem; transform: none; }
-.file-art { flex: 1; align-self: stretch; display: grid; place-items: center; min-height: 0; padding: 6px 0 14px; }
+.file-art { flex: 1 0 210px; align-self: stretch; display: grid; place-items: center; min-height: 0; padding: 6px 0 14px; }
 .file-sticker {
   width: auto; max-width: 70%; max-height: 190px; object-fit: contain;
   transform: translateZ(50px) rotate(6deg); filter: drop-shadow(0 16px 18px rgba(0,0,0,0.35));
