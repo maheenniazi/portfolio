@@ -137,7 +137,7 @@ const DATA = {
     },
     {
       name: "SynCode",
-      sticker: "spidey-profile",
+      sticker: "matchbox-ace",
       color: "#c9bca8",
       blurb: "Collaborative Code Editor",
       stack: ["React", "Monaco", "Node.js", "Express", "Socket.io"],
