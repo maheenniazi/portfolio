@@ -330,7 +330,6 @@ main { position: relative; z-index: 1; padding: 90px 0 40px; }
 }
 .polaroid img { width: 100%; height: 100%; object-fit: cover; }
 .slot-hint { font-family: var(--hand); font-size: 1.3rem; color: #9a8478; }
-.polaroid-cap { position: absolute; left: 0; right: 0; bottom: 3%; text-align: center; font-family: var(--hand); font-size: 1.4rem; color: var(--maroon); transform: translateZ(30px) rotate(-3deg); }
 .about-text p { margin-bottom: 1.1em; font-size: 1.02rem; }
 .about-text p:first-child::first-letter { font-family: var(--script); font-size: 4.2em; float: left; line-height: 0.8; margin: 0.08em 0.1em 0 0; color: var(--rose); }
 
@@ -350,7 +349,7 @@ main { position: relative; z-index: 1; padding: 90px 0 40px; }
 .ticket-meta { font-family: var(--type); font-size: 0.78rem !important; margin-top: 4px; }
 
 /* ---------- WORK: 3D flip files ---------- */
-.files { display: grid; grid-template-columns: repeat(2, 1fr); gap: 46px 34px; }
+.files { display: grid; grid-template-columns: repeat(2, 1fr); gap: 46px 34px; align-items: start; }
 .file {
   --rx: 0deg; --ry: 0deg;
   position: relative; perspective: 1400px; padding-top: 26px; cursor: pointer;
@@ -364,11 +363,15 @@ main { position: relative; z-index: 1; padding: 90px 0 40px; }
 .file-flip {
   position: relative; display: grid; transform-style: preserve-3d;
   transform: rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform 0.3s var(--ease);
+  transition: transform 0.3s var(--ease), height 0.7s var(--ease);
 }
-.file.flipped .file-flip { transform: rotateX(calc(var(--rx) * 0.4)) rotateY(calc(180deg + var(--ry) * 0.4)); transition: transform 0.9s var(--spring); }
-.file:not(.flipped) .file-flip { transition: transform 0.9s var(--spring); }
-.file:hover:not(.flipped) .file-flip, .file:hover .file-tab { transition-duration: 0.25s; }
+.file.flipped .file-flip { transform: rotateX(calc(var(--rx) * 0.4)) rotateY(calc(180deg + var(--ry) * 0.4)); transition: transform 0.9s var(--spring), height 0.7s var(--ease); }
+.file:not(.flipped) .file-flip { transition: transform 0.9s var(--spring), height 0.7s var(--ease); }
+.file:hover:not(.flipped) .file-flip { transition: transform 0.25s var(--ease), height 0.7s var(--ease); }
+.file:hover .file-tab { transition-duration: 0.25s; }
+/* only the side facing you takes clicks (Safari hit-tests hidden backfaces) */
+.file.flipped .face-front, .file:not(.flipped) .face-back { pointer-events: none; }
+.file.flipped { cursor: auto; }
 .face {
   position: relative; grid-area: 1 / 1; border-radius: 4px 14px 14px 14px; padding: 30px 28px 26px; min-height: 470px;
   backface-visibility: hidden; -webkit-backface-visibility: hidden; transform-style: preserve-3d;
@@ -403,7 +406,7 @@ main { position: relative; z-index: 1; padding: 90px 0 40px; }
 .file-btn span { display: inline-block; transition: transform 0.3s; }
 .file:hover .file-btn span { transform: translateX(5px); }
 .face-back {
-  position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--pink) transparent;
+  position: absolute; inset: 0; overflow: hidden;
   transform: rotateY(180deg); background: var(--paper); color: var(--ink);
   background-image: repeating-linear-gradient(transparent 0 27px, rgba(184,92,110,0.18) 27px 28px);
   border-left: 8px solid var(--c);
