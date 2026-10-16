@@ -344,15 +344,29 @@
       const back = $(".face-back", card), cs = getComputedStyle(back);
       return $(".back-inner", card).offsetHeight + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
     };
+    // Once the flip finishes the card "settles": the 3D transforms are dropped so the
+    // back is a plain flat element. It looks identical, but taps land where you aim
+    // (Safari mis-maps clicks on 3D-flipped faces, which broke the close button).
     const setOpen = (card, open) => {
       if (card.classList.contains("flipped") === open) return;
       const flip = $(".file-flip", card), front = $(".face-front", card);
+      clearTimeout(card._settle);
       if (open) {
         card.dataset.frontH = front.offsetHeight;
         flip.style.height = card.dataset.frontH + "px";
         card.classList.add("flipped");
         requestAnimationFrame(() => (flip.style.height = Math.max(+card.dataset.frontH, backHeight(card)) + "px"));
+        card._settle = setTimeout(() => {
+          card.classList.add("no-anim", "settled");
+          void flip.offsetWidth;
+          card.classList.remove("no-anim");
+        }, reduced ? 0 : 950);
       } else {
+        // restore the (visually identical) 3D pose without animating, then flip back
+        card.classList.add("no-anim");
+        card.classList.remove("settled");
+        void flip.offsetWidth;
+        card.classList.remove("no-anim");
         flip.style.height = card.dataset.frontH + "px";
         card.classList.remove("flipped");
         setTimeout(() => { if (!card.classList.contains("flipped")) flip.style.height = ""; }, 750);
@@ -367,10 +381,9 @@
         if (e.target.closest(".file-close")) setOpen(card, false);
         else if (!flipped) setOpen(card, true);
       });
+      // each file stays open until you close it (x, or Esc while it has focus)
+      card.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(card, false); });
     });
-    // Esc or a click outside closes any open file
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") cards.forEach((c) => setOpen(c, false)); });
-    document.addEventListener("click", (e) => { cards.forEach((c) => { if (!c.contains(e.target)) setOpen(c, false); }); });
     addEventListener("resize", () => cards.forEach((c) => {
       if (!c.classList.contains("flipped")) return;
       $(".file-flip", c).style.height = Math.max(+c.dataset.frontH, backHeight(c)) + "px";
