@@ -31,9 +31,9 @@ const DATA = {
       instagram: "https://www.instagram.com/maheenniazi_/",
     },
     about: [
-      "Hi, I'm Maheen! I'm a CS & Applied Math student at the University of Toronto Mississauga (grad 2029), and I like making things that are maybe a little too ambitious for one person.",
-      "Think: a 3D kart racer with a custom engine I wrote from scratch, a study buddy that runs fully offline so your notes never leave your laptop, a Google-Docs-style code editor people can type in together. I build AI-first — I write a spec for each system, point AI coding agents at it, then roll up my sleeves and debug the hard parts (physics, netcode, retrieval) myself.",
-      "When I'm not coding, I'm tutoring (French, web dev, LEGO robotics, elementary everything), helping run hackathons on campus, re-watching Spider-Man, and generally being a cool lil tech girl about it.",
+      "Hi, I'm Maheen. I study Computer Science and Applied Math at the University of Toronto Mississauga, and I graduate in 2029.",
+      "I like building things end to end and figuring out how they work underneath. Recently that's meant a multiplayer 3D racing game on a WebGL engine I wrote myself, a study assistant that runs entirely offline, and a real-time collaborative code editor. I use AI coding tools to move fast, but I design the systems and do the hard debugging myself, especially physics, networking and retrieval.",
+      "Outside of school, I tutor French and web development, help organize DeerHacks, UTM's hackathon, and play guitar.",
     ],
   },
 
