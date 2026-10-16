@@ -142,7 +142,7 @@
         <div class="file-flip">
           <div class="face face-front">
             <span class="file-num">${num}</span>
-            ${proj.sticker ? `<img class="file-sticker" src="${STK(proj.sticker)}" alt="" loading="lazy" />` : ""}
+            <div class="file-art">${proj.sticker ? `<img class="file-sticker" src="${STK(proj.sticker)}" alt="" loading="lazy" />` : ""}</div>
             <h3 class="file-name">${proj.name}</h3>
             <p class="file-blurb">${proj.blurb}</p>
             <div class="file-stack">${proj.stack.map((s) => `<span class="chip">${s}</span>`).join("")}</div>
