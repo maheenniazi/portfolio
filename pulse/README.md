@@ -1,5 +1,9 @@
 # Pulse — a limit order book matching engine & backtester
 
+[![CI](https://github.com/maheenniazi/pulse/actions/workflows/ci.yml/badge.svg)](https://github.com/maheenniazi/pulse/actions/workflows/ci.yml)
+![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=cplusplus)
+![sanitizers](https://img.shields.io/badge/sanitizers-ASan%20%7C%20UBSan%20%7C%20TSan-success)
+
 A low-latency **limit order book (LOB) matching engine** written in modern
 C++20, with an **event-driven backtester** and a sample **market-making
 strategy** on top. It's the core of what every exchange and trading firm runs:
