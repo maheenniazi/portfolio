@@ -153,6 +153,7 @@
               <button class="file-close" data-flip aria-label="Close the ${proj.name} file">&times;</button></div>
             <ul class="file-points">${proj.points.map((x) => `<li>${x}</li>`).join("")}</ul>
             <a class="file-link" href="${proj.repo}" target="_blank" rel="noopener">${ICONS.github} view on github <span>&rarr;</span></a>
+            ${proj.demo ? `<a class="file-link" href="${proj.demo}" target="_blank" rel="noopener">▶ live demo <span>&rarr;</span></a>` : ""}
             </div>
           </div>
         </div>`;
