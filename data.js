@@ -89,6 +89,21 @@ const DATA = {
 
   projects: [
     {
+      name: "Pulse",
+      sticker: "spidey-badge",
+      color: "#a9c0cf",
+      blurb: "Order Book Matching Engine",
+      stack: ["C++20", "CMake", "Lock-free", "Sanitizers", "Python"],
+      repo: "https://github.com/maheenniazi/pulse",
+      points: [
+        "Low-latency limit order book matching engine in modern C++20 — price-time priority with limit/market orders, GTC/IOC/FOK time-in-force, and cancel/modify — sustaining ~5M orders/sec at p50 ~110ns / p99 ~440ns per order on a single core.",
+        "Zero-allocation hot path via a custom object pool, intrusive FIFO price levels, and an O(1) order index for cancels; prices kept as integer ticks to avoid floating-point error.",
+        "Lock-free single-producer/single-consumer ring buffer (acquire/release memory ordering, cache-line padding) threads market data to the engine — proven race-free under ThreadSanitizer with a one-million-message test.",
+        "Event-driven backtester with position/cash/P&L attribution and an inventory-aware, post-only market-making strategy; a Python layer renders Sharpe, drawdown and equity/inventory charts.",
+        "12-test suite including a 20k-operation fuzz test; clean under Address/UB/Thread sanitizers; GitHub Actions CI across GCC and Clang; warning-free under -Wall -Wextra -Wpedantic -Wconversion.",
+      ],
+    },
+    {
       name: "Lumora",
       sticker: "lily",
       color: "#e8c4c8",
