@@ -95,6 +95,7 @@ const DATA = {
       blurb: "Order Book Matching Engine",
       stack: ["C++20", "CMake", "Lock-free", "Sanitizers", "Python"],
       repo: "https://github.com/maheenniazi/pulse",
+      demo: "https://maheenniazi.github.io/pulse",
       points: [
         "Low-latency limit order book matching engine in modern C++20 — price-time priority with limit/market orders, GTC/IOC/FOK time-in-force, and cancel/modify — sustaining ~5M orders/sec at p50 ~110ns / p99 ~440ns per order on a single core.",
         "Zero-allocation hot path via a custom object pool, intrusive FIFO price levels, and an O(1) order index for cancels; prices kept as integer ticks to avoid floating-point error.",
