@@ -9,7 +9,7 @@ const DATA = {
   //   about: "assets/photos/me.jpg"
   // Empty slots show a little "add a pic" hint instead.
   photos: {
-    about: "",
+    about: "assets/photos/me.jpg",
   },
 
   profile: {
