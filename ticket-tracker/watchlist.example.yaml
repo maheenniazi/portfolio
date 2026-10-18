@@ -1,0 +1,19 @@
+# Ticket Tracker watchlist
+# Copy this to watchlist.yaml and edit. Each entry is one alert rule.
+
+watches:
+  - name: "Coldplay LA"          # label shown in alerts
+    query: "Coldplay"            # keywords searched at each provider
+    city: "Los Angeles"          # optional; omit to match any city
+    max_price: 150               # alert when cheapest ticket <= this
+    currency: "USD"
+
+  - name: "Olivia Rodrigo NYC"
+    query: "Olivia Rodrigo"
+    city: "New York"
+    max_price: 120
+
+  - name: "Hozier (any city)"
+    query: "Hozier"
+    max_price: 90
+    # providers: [seatgeek]      # optional: restrict this watch to some sources
