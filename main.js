@@ -150,6 +150,7 @@
       const hot = e.target.closest("a, button, .project, .interest, .contact-card, .skill-tag");
       dot.style.width = dot.style.height = hot ? "48px" : "30px";
       dot.style.margin = hot ? "-24px 0 0 -24px" : "-15px 0 0 -15px";
+      dot.classList.toggle("on-block", !!e.target.closest(".project, .interest, .contact-card, .skill-tag, .project-toggle, .edu-card, .tag, .photo-frame"));
     });
     addEventListener("pointerdown", () => (dot.style.width = dot.style.height = "22px"));
     function frame() {
@@ -196,7 +197,54 @@
     });
   }
 
+  // ---------------------------------------------------------- gaming layer
+  // achievement toasts when each section first scrolls into view
+  function achievements() {
+    const wrap = $("#toast-wrap");
+    const secs = [
+      ["about", "Player profile"], ["work", "Projects unlocked"], ["skills", "Toolkit acquired"],
+      ["experience", "Quest log opened"], ["interests", "Hobbies discovered"], ["contact", "Comms online"],
+    ];
+    const star = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.6 6.3 6.8.5-5.2 4.4 1.7 6.6L12 17.8 6.1 20.3l1.7-6.6L2.6 9.3l6.8-.5z"/></svg>`;
+    const toast = (label) => {
+      const t = el("div", "toast", `<span class="toast-ic">${star}</span><span class="toast-txt"><span class="toast-t">Achievement unlocked</span><span class="toast-m">${label}</span></span>`);
+      wrap.appendChild(t);
+      requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add("show")));
+      setTimeout(() => { t.classList.remove("show"); setTimeout(() => t.remove(), 600); }, 3200);
+    };
+    if (!("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          const hit = secs.find((x) => x[0] === e.target.id);
+          if (hit) toast(hit[1]);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.35 });
+    secs.forEach(([id]) => { const n = $("#" + id); if (n) io.observe(n); });
+  }
+
+  // bottom HUD: hearts (full) + an XP bar that fills with scroll; level per section
+  function hud() {
+    const hud = $("#hud"), fill = $("#hud-fill"), lvl = $("#hud-lvl"), hearts = $("#hud-hearts");
+    if (!hud) return;
+    hearts.innerHTML = Array.from({ length: 5 }, () => `<span class="heart">&#10084;</span>`).join("");
+    const secs = ["about", "work", "skills", "experience", "interests", "contact"].map((id) => $("#" + id)).filter(Boolean);
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - innerHeight;
+      const p = h > 0 ? clamp(scrollY / h, 0, 1) : 0;
+      fill.style.width = (p * 100).toFixed(1) + "%";
+      hud.classList.toggle("show", scrollY > innerHeight * 0.75);
+      let cur = 0;
+      secs.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.5) cur = i + 1; });
+      lvl.textContent = "LVL " + Math.max(1, cur);
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
-    render(); reveals(); theme(); cursor();
+    render(); reveals(); theme(); cursor(); achievements(); hud();
   });
 })();
