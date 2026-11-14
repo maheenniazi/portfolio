@@ -116,7 +116,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .meta-bl { bottom: clamp(20px, 3.4vw, 40px); left: var(--gutter); }
 
 .stage { position: relative; z-index: 3; width: 100%; display: grid; place-items: center; text-align: center; padding: 0 var(--gutter); transform: translateY(-5vh); }
-.stage-inner { position: relative; display: grid; place-items: center; will-change: transform; }
+.stage-inner { position: relative; display: grid; place-items: center; will-change: transform; perspective: 1100px; perspective-origin: 50% 42%; }
 .avatar {
   width: clamp(260px, 42vh, 460px); aspect-ratio: 3 / 3.4; display: grid; place-items: center;
   border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
@@ -124,7 +124,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   box-shadow: inset 0 0 80px rgba(0,0,0,0.12);
   overflow: hidden;
 }
-.avatar.is-cutout { position: relative; width: auto; height: clamp(360px, 66vh, 640px); aspect-ratio: 996 / 1000; background: none; box-shadow: none; border-radius: 0; overflow: visible; perspective: 900px; }
+.avatar.is-cutout { position: relative; width: auto; height: clamp(360px, 66vh, 640px); aspect-ratio: 996 / 1000; background: none; box-shadow: none; border-radius: 0; overflow: visible; }
 .avatar-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.22s var(--ease); filter: drop-shadow(0 30px 40px rgba(0,0,0,0.28)); backface-visibility: hidden; }
 .avatar-frame.on { opacity: 1; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }

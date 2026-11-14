@@ -164,11 +164,15 @@
 
     let tx = 0, ty = 0, sx = 0, sy = 0, winkUntil = 0, funStart = 0, funUntil = 0;
     const FUN_MS = 900;
-    if (finePointer && !reduced) {
-      addEventListener("pointermove", (e) => {
+    // track any mouse/trackpad — don't gate on (pointer: fine), which is false
+    // on touch-capable laptops and would stop the head from ever moving.
+    if (!reduced) {
+      const onMove = (e) => {
         tx = (e.clientX / innerWidth - 0.5) * 2;   // -1 … 1
         ty = (e.clientY / innerHeight - 0.5) * 2;
-      });
+      };
+      addEventListener("pointermove", onMove, { passive: true });
+      addEventListener("mousemove", onMove, { passive: true });
     }
     const doWink = () => { if (wink) winkUntil = performance.now() + 300; };
     const doFunny = () => {                                     // click → hop + full 360° spin + wink
