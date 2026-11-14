@@ -14,13 +14,13 @@ const DATA = {
 
   profile: {
     name: "Maheen Niazi",
-    tagline: "CS & Applied Math @ UofT — I build games, AI tools and little things that run offline and don't break. (and yes, I take Spider-Man way too seriously.)",
+    tagline: "CS & Applied Math at UofT, building low-latency systems, quant tooling and AI apps — mostly from scratch.",
     // Short punchy lines cycled by the typewriter in the hero
     roles: [
-      "cs & applied math @ uoft",
-      "i build games from scratch",
-      "ai tools that run offline",
-      "your friendly neighbourhood tech girl",
+      "low-latency systems",
+      "quant backtesting & market-making",
+      "offline-first AI tools",
+      "games built from scratch",
     ],
     location: "Mississauga, ON",
     email: "maheen.niazi112@gmail.com",
@@ -245,7 +245,6 @@ const DATA = {
     { icon: "music", sticker: "vinyl-red",  title: "music",  note: "a playlist for every mood & every project" },
     { icon: "flag", sticker: "star-felt", title: "formula 1", note: "lights out and away we go — every sunday" },
     { icon: "tv", sticker: "camera",     title: "tv & film", note: "comfort rewatches + anything with a plot twist" },
-    { icon: "spider", sticker: "spidey-hang", title: "spider-man", note: "the whole personality, honestly" },
     { icon: "book", sticker: "wax-rose", title: "reading", note: "fantasy, a bit of everything, cozy corners" },
   ],
 };
