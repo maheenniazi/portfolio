@@ -1,7 +1,7 @@
 // ============================================================
 //  main.js — renders content from data.js + light interactivity
-//  Warm-minimal build: expandable project cards, nav highlight,
-//  gentle scroll reveals, theme toggle. No frameworks.
+//  Arty editorial build: cursor-parallax centerpiece, custom
+//  cursor ring, gentle reveals, expandable project cards, theme.
 // ============================================================
 (function () {
   "use strict";
@@ -13,7 +13,9 @@
     if (html != null) n.innerHTML = html;
     return n;
   };
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   const ICONS = {
     github: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.18 9.05 7.6 10.52.56.1.76-.24.76-.53v-1.9c-3.1.67-3.75-1.3-3.75-1.3-.5-1.3-1.24-1.64-1.24-1.64-1.02-.7.08-.68.08-.68 1.12.08 1.7 1.16 1.7 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.4-1.22.72-1.5-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.1-2.96 0 0 .94-.3 3.07 1.15a10.7 10.7 0 0 1 5.6 0c2.12-1.45 3.06-1.15 3.06-1.15.6 1.54.22 2.68.1 2.96.72.78 1.15 1.78 1.15 3 0 4.3-2.6 5.24-5.1 5.52.42.36.78 1.06.78 2.14v3.17c0 .3.2.63.78.52a11.1 11.1 0 0 0 7.58-10.52C23.1 5.33 18.27.5 12 .5Z"/></svg>`,
@@ -21,7 +23,7 @@
     instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"/></svg>`,
     mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 6l9 7 9-7"/></svg>`,
     external: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>`,
-    chevron: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="15" height="15"><path d="M6 9l6 6 6-6"/></svg>`,
+    chevron: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="15" height="15"><path d="M6 9l6 6 6-6"/></svg>`,
     play: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>`,
     guitar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3l6 6"/><path d="M13 5l-7.5 7.5a4 4 0 1 0 2 2L15 7"/><circle cx="8.5" cy="15.5" r="1.3"/></svg>`,
     music: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>`,
@@ -34,27 +36,19 @@
   // ---------------------------------------------------------- render
   function render() {
     const p = DATA.profile;
+    const photos = DATA.photos || {};
 
-    // hero rotating phrase
-    const roles = p.roles || [];
-    const tag = $("#hero-tagline");
-    if (tag) {
-      tag.innerHTML = `I build <span class="swap">${roles[0] || ""}</span>.`;
-      if (roles.length > 1 && !reduced) rotate($(".swap", tag), roles);
+    $("#hero-gh").innerHTML = ICONS.github;
+    $("#hero-intro").textContent = p.heroIntro || p.tagline || "";
+
+    // hero centerpiece
+    const av = $("#avatar");
+    if (photos.hero) {
+      av.innerHTML = `<img src="${photos.hero}" alt="Maheen Niazi" />`;
+      av.classList.add("is-cutout");
+    } else if (photos.about) {
+      av.innerHTML = `<img src="${photos.about}" alt="Maheen Niazi" />`;
     }
-
-    // hero actions
-    const act = $("#hero-actions");
-    [
-      { icon: ICONS.mail, label: "Email me", href: `mailto:${p.email}`, primary: true },
-      { icon: ICONS.github, label: "GitHub", href: p.links.github },
-      { icon: ICONS.linkedin, label: "LinkedIn", href: p.links.linkedin },
-    ].forEach((b) => {
-      const a = el("a", "btn" + (b.primary ? " btn-primary" : ""), `${b.icon}<span>${b.label}</span>`);
-      a.href = b.href;
-      if (b.href.startsWith("http")) { a.target = "_blank"; a.rel = "noopener"; }
-      act.appendChild(a);
-    });
 
     // about
     const at = $("#about-text");
@@ -62,7 +56,7 @@
     const ed = DATA.education;
     $("#education-card").innerHTML =
       `<span class="k">Education</span><h4>${ed.school}</h4><p>${ed.degree}</p><p>${ed.location} · ${ed.date}</p>`;
-    fillSlot($('[data-slot="about"]'), (DATA.photos || {}).about);
+    fillSlot($('[data-slot="about"]'), photos.about);
 
     // projects
     const pg = $("#projects-grid");
@@ -70,28 +64,22 @@
       const num = String(i + 1).padStart(2, "0");
       const summary = proj.points[0];
       const rest = proj.points.slice(1);
-      const card = el("article", "project");
+      const card = el("article", "project reveal");
       const links = [`<a class="project-link" href="${proj.repo}" target="_blank" rel="noopener">${ICONS.github}<span>Code</span></a>`];
       if (proj.demo) links.unshift(`<a class="project-link" href="${proj.demo}" target="_blank" rel="noopener">${ICONS.play}<span>Live demo</span></a>`);
       card.innerHTML = `
-        <div class="project-top">
-          <span class="project-num">${num}</span>
-          <span class="project-dot" style="background:${proj.color || "var(--accent)"}"></span>
-        </div>
+        <div class="project-top"><span class="project-num">${num}</span><span class="project-dot" style="background:${proj.color || "var(--accent)"}"></span></div>
         <h3 class="project-name">${proj.name}</h3>
         <p class="project-blurb">${proj.blurb}</p>
         <p class="project-summary">${summary}</p>
         <div class="project-tags">${proj.stack.map((s) => `<span class="tag">${s}</span>`).join("")}</div>
         <div class="project-details"><div><ul class="project-points">${rest.map((x) => `<li>${x}</li>`).join("")}</ul></div></div>
-        <div class="project-foot">
-          ${links.join("")}
-          ${rest.length ? `<button class="project-toggle" aria-expanded="false"><span class="label">Details</span><span class="chev">${ICONS.chevron}</span></button>` : ""}
-        </div>`;
+        <div class="project-foot">${links.join("")}${rest.length ? `<button class="project-toggle" aria-expanded="false"><span class="label">details</span><span class="chev">${ICONS.chevron}</span></button>` : ""}</div>`;
       const btn = $(".project-toggle", card);
       if (btn) btn.addEventListener("click", () => {
         const open = card.classList.toggle("open");
         btn.setAttribute("aria-expanded", String(open));
-        $(".label", btn).textContent = open ? "Less" : "Details";
+        $(".label", btn).textContent = open ? "less" : "details";
       });
       pg.appendChild(card);
     });
@@ -104,7 +92,7 @@
       sw.appendChild(node);
     });
 
-    // experience / teaching / leadership
+    // timelines
     fillTimeline("#experience-list", DATA.experience, true);
     fillTimeline("#teaching-list", DATA.teaching, false);
     fillTimeline("#leadership-list", DATA.leadership, false);
@@ -114,7 +102,7 @@
     // interests
     const ig = $("#interests-grid");
     (DATA.interests || []).forEach((it) => {
-      const node = el("article", "interest");
+      const node = el("article", "interest reveal");
       node.innerHTML = `<span class="interest-icon">${ICONS[it.icon] || ICONS.book}</span><h4>${it.title}</h4><p>${it.note}</p>`;
       ig.appendChild(node);
     });
@@ -127,7 +115,7 @@
       { icon: ICONS.github, label: "GitHub", sub: "@maheenniazi", href: p.links.github },
       { icon: ICONS.instagram, label: "Instagram", sub: "@maheenniazi_", href: p.links.instagram },
     ].forEach((c) => {
-      const a = el("a", "contact-card");
+      const a = el("a", "contact-card reveal");
       a.href = c.href;
       if (c.href.startsWith("http")) { a.target = "_blank"; a.rel = "noopener"; }
       a.innerHTML = `<span class="contact-ic">${c.icon}</span><span class="contact-meta"><span class="contact-label">${c.label}</span><span class="contact-sub">${c.sub}</span></span>`;
@@ -135,11 +123,7 @@
     });
   }
 
-  function fillSlot(slot, src) {
-    if (!slot || !src) return;
-    slot.innerHTML = `<img src="${src}" alt="Maheen Niazi" />`;
-  }
-
+  function fillSlot(slot, src) { if (slot && src) slot.innerHTML = `<img src="${src}" alt="Maheen Niazi" />`; }
   function fillTimeline(sel, items, bullets) {
     const root = $(sel);
     if (!root || !items) return;
@@ -154,56 +138,47 @@
     });
   }
 
-  // rotating hero phrase (gentle fade)
-  function rotate(node, words) {
-    let i = 0;
-    setInterval(() => {
-      node.classList.add("out");
-      setTimeout(() => {
-        i = (i + 1) % words.length;
-        node.textContent = words[i];
-        node.classList.remove("out");
-      }, 400);
-    }, 2800);
-  }
-
-  // ---------------------------------------------------------- nav + scroll
-  function chrome() {
-    const nav = $("#nav"), prog = $("#progress");
-    const links = $$(".nav-links a");
-    const secs = links.map((l) => $(l.getAttribute("href"))).filter(Boolean);
-    const onScroll = () => {
-      nav.classList.toggle("scrolled", scrollY > 8);
-      const h = document.documentElement.scrollHeight - innerHeight;
-      prog.style.transform = `scaleX(${h > 0 ? Math.min(1, scrollY / h) : 0})`;
-      let cur = -1;
-      secs.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.4) cur = i; });
-      links.forEach((l, i) => l.classList.toggle("active", i === cur));
-    };
-    addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+  // ---------------------------------------------------------- cursor parallax + ring
+  function cursor() {
+    if (!finePointer || reduced) return;
+    const dot = $("#cursor-dot"), inner = $("#stage-inner"), avatar = $("#avatar");
+    let tx = 0.5, ty = 0.5, cx = 0.5, cy = 0.5;
+    addEventListener("pointermove", (e) => {
+      dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      dot.style.opacity = "1";
+      tx = e.clientX / innerWidth; ty = e.clientY / innerHeight;
+      const hot = e.target.closest("a, button, .project, .interest, .contact-card, .skill-tag");
+      dot.style.width = dot.style.height = hot ? "48px" : "30px";
+      dot.style.margin = hot ? "-24px 0 0 -24px" : "-15px 0 0 -15px";
+    });
+    addEventListener("pointerdown", () => (dot.style.width = dot.style.height = "22px"));
+    function frame() {
+      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+      const dx = (cx - 0.5), dy = (cy - 0.5);
+      if (inner) inner.style.transform = `translate(${dx * 26}px, ${dy * 20}px)`;
+      if (avatar) avatar.style.transform = `rotateY(${dx * 10}deg) rotateX(${-dy * 10}deg) translateZ(0)`;
+      requestAnimationFrame(frame);
+    }
+    if (avatar) avatar.style.transformStyle = "preserve-3d";
+    frame();
   }
 
   // reveal on scroll
   function reveals() {
-    const items = [...$$(".reveal"), ...$$(".project, .interest, .skill-group, .contact-card")];
-    if (reduced || !("IntersectionObserver" in window)) {
-      items.forEach((n) => n.classList.add("in", "in-view"));
-      return;
-    }
+    const items = $$(".section .panel, .sec-head, .project, .interest, .contact-card");
+    items.forEach((n) => n.classList.add("reveal"));
+    if (reduced || !("IntersectionObserver" in window)) { items.forEach((n) => n.classList.add("in")); return; }
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add("in", "in-view"); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: "0px 0px -8% 0px" });
     items.forEach((n) => io.observe(n));
   }
 
   // theme
   function theme() {
     const root = document.documentElement, icon = $(".theme-icon");
-    const SUN = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>`;
-    const MOON = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"/></svg>`;
+    const SUN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>`;
+    const MOON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"/></svg>`;
     let saved = null;
     try { saved = localStorage.getItem("mn-theme"); } catch (e) { /* blocked */ }
     if (saved) root.setAttribute("data-theme", saved);
@@ -222,6 +197,6 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    render(); chrome(); reveals(); theme();
+    render(); reveals(); theme(); cursor();
   });
 })();

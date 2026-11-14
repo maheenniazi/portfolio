@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maheen Niazi</title>
-  <meta name="description" content="Maheen Niazi — CS & Applied Math @ UofT. I build low-latency systems, quant tooling, AI apps and games." />
+  <meta name="description" content="Maheen Niazi — CS & Applied Math @ UofT. Low-latency systems, quant tooling, AI apps and games." />
   <meta name="author" content="Maheen Niazi" />
   <meta property="og:title" content="Maheen Niazi" />
   <meta property="og:description" content="CS & Applied Math @ UofT — low-latency systems, quant tooling, AI apps and games." />
@@ -12,57 +12,53 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,500;0,600;0,700;1,500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f4efe6'/><text x='50' y='71' font-size='62' font-family='Georgia,serif' fill='%235f7360' text-anchor='middle'>M</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%239ba888'/><text x='50' y='72' font-size='60' font-family='Georgia,serif' fill='%23f1eee1' text-anchor='middle'>M</text></svg>" />
 </head>
 <body>
   <a class="skip-link" href="#work">Skip to work</a>
-  <div class="progress" id="progress" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
 
-  <!-- ============================ NAV ============================ -->
-  <header class="nav" id="nav">
-    <div class="nav-inner">
-      <a href="#top" class="nav-name">Maheen&nbsp;Niazi</a>
-      <nav class="nav-links" aria-label="Sections">
-        <a href="#about">About</a>
-        <a href="#work">Work</a>
-        <a href="#skills">Skills</a>
-        <a href="#experience">Experience</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light / dark mode" title="Toggle theme (T)">
-        <span class="theme-icon" aria-hidden="true"></span>
-      </button>
+  <!-- ============================ HERO ============================ -->
+  <header class="hero" id="top">
+    <!-- corner meta labels -->
+    <div class="meta meta-tl">
+      <span class="meta-name">Maheen Niazi</span>
+      <span class="meta-sub">CS &amp; Applied Math</span>
     </div>
+    <div class="meta meta-tr">
+      <span class="meta-word">Portfolio</span>
+      <a class="meta-ic" href="https://github.com/maheenniazi" target="_blank" rel="noopener" aria-label="GitHub" id="hero-gh"></a>
+      <button class="meta-ic theme-toggle" id="theme-toggle" aria-label="Toggle light / dark mode" title="Toggle theme (T)"><span class="theme-icon" aria-hidden="true"></span></button>
+    </div>
+    <div class="meta meta-right"><span>Based in Mississauga, ON</span></div>
+    <div class="meta meta-bl"><span>Code · Math · Build</span></div>
+
+    <!-- centerpiece -->
+    <div class="stage" id="stage">
+      <div class="stage-inner" id="stage-inner">
+        <div class="avatar" id="avatar" data-slot="hero">
+          <span class="avatar-hint">your avatar floats here</span>
+        </div>
+        <h1 class="hero-title">maheen&nbsp;niazi</h1>
+      </div>
+      <p class="hero-intro" id="hero-intro"></p>
+    </div>
+
+    <a class="scroll-cue" href="#about" aria-label="Scroll down"><span class="scroll-word">Scroll</span><span class="scroll-line"></span></a>
   </header>
 
-  <main id="top">
-    <!-- ============================ HERO ============================ -->
-    <section class="hero reveal" aria-label="Intro">
-      <p class="hero-eyebrow">Hi, I'm</p>
-      <h1 class="hero-name">Maheen Niazi</h1>
-      <p class="hero-tagline" id="hero-tagline"></p>
-      <p class="hero-sub">
-        <span>Computer Science &amp; Applied Math</span>
-        <span class="dot">·</span>
-        <span>University of Toronto</span>
-        <span class="dot">·</span>
-        <span>Mississauga, ON</span>
-      </p>
-      <div class="hero-actions" id="hero-actions"></div>
-    </section>
-
+  <main>
     <!-- ============================ ABOUT ============================ -->
-    <section id="about" class="section reveal">
-      <div class="section-head">
+    <section id="about" class="section">
+      <div class="sec-head">
         <span class="eyebrow">01 — About</span>
-        <h2 class="section-title">A little about me</h2>
+        <h2 class="sec-title">about me</h2>
       </div>
-      <div class="about-grid">
-        <figure class="about-photo">
-          <div class="photo-frame" data-slot="about"><span class="slot-hint">add a photo</span></div>
-        </figure>
+      <div class="panel about-grid">
+        <figure class="about-photo"><div class="photo-frame" data-slot="about"><span class="slot-hint">add a photo</span></div></figure>
         <div class="about-body">
           <div id="about-text" class="about-text"></div>
           <div class="edu-card" id="education-card"></div>
@@ -71,75 +67,67 @@
     </section>
 
     <!-- ============================ WORK ============================ -->
-    <section id="work" class="section reveal">
-      <div class="section-head">
+    <section id="work" class="section">
+      <div class="sec-head">
         <span class="eyebrow">02 — Work</span>
-        <h2 class="section-title">Selected projects</h2>
-        <p class="section-sub">Things I've designed and built — mostly from scratch, from low-latency C++ to offline-first AI. Open a card for the details.</p>
+        <h2 class="sec-title">selected projects</h2>
+        <p class="sec-intro">Things I've designed and built — mostly from scratch, from low-latency C++ to offline-first AI. Open a card for the details.</p>
       </div>
       <div class="projects" id="projects-grid"></div>
     </section>
 
     <!-- ============================ SKILLS ============================ -->
-    <section id="skills" class="section reveal">
-      <div class="section-head">
+    <section id="skills" class="section">
+      <div class="sec-head">
         <span class="eyebrow">03 — Skills</span>
-        <h2 class="section-title">Tools I reach for</h2>
+        <h2 class="sec-title">tools i reach for</h2>
       </div>
-      <div class="skills" id="skills-wrap"></div>
+      <div class="panel skills" id="skills-wrap"></div>
     </section>
 
     <!-- ============================ EXPERIENCE ============================ -->
-    <section id="experience" class="section reveal">
-      <div class="section-head">
+    <section id="experience" class="section">
+      <div class="sec-head">
         <span class="eyebrow">04 — Experience</span>
-        <h2 class="section-title">Where I've worked &amp; grown</h2>
+        <h2 class="sec-title">worked &amp; grown</h2>
       </div>
-
-      <h3 class="sub-head">Experience</h3>
-      <div class="timeline" id="experience-list"></div>
-
-      <h3 class="sub-head">Teaching &amp; mentorship</h3>
-      <div class="timeline" id="teaching-list"></div>
-
-      <h3 class="sub-head">Leadership &amp; activities</h3>
-      <div class="timeline" id="leadership-list"></div>
-
-      <div class="creds">
-        <div class="cred-col">
-          <h3 class="sub-head">Certifications</h3>
-          <ul id="certs-list" class="cred-list"></ul>
-        </div>
-        <div class="cred-col">
-          <h3 class="sub-head">Awards</h3>
-          <ul id="awards-list" class="cred-list"></ul>
+      <div class="panel">
+        <h3 class="sub-head">Experience</h3>
+        <div class="timeline" id="experience-list"></div>
+        <h3 class="sub-head">Teaching &amp; mentorship</h3>
+        <div class="timeline" id="teaching-list"></div>
+        <h3 class="sub-head">Leadership &amp; activities</h3>
+        <div class="timeline" id="leadership-list"></div>
+        <div class="creds">
+          <div class="cred-col"><h3 class="sub-head">Certifications</h3><ul id="certs-list" class="cred-list"></ul></div>
+          <div class="cred-col"><h3 class="sub-head">Awards</h3><ul id="awards-list" class="cred-list"></ul></div>
         </div>
       </div>
     </section>
 
     <!-- ============================ INTERESTS ============================ -->
-    <section id="interests" class="section reveal">
-      <div class="section-head">
+    <section id="interests" class="section">
+      <div class="sec-head">
         <span class="eyebrow">05 — Off the clock</span>
-        <h2 class="section-title">Things I love</h2>
+        <h2 class="sec-title">things i love</h2>
       </div>
       <div class="interests" id="interests-grid"></div>
     </section>
 
     <!-- ============================ CONTACT ============================ -->
-    <section id="contact" class="section reveal">
-      <div class="section-head">
+    <section id="contact" class="section">
+      <div class="sec-head">
         <span class="eyebrow">06 — Contact</span>
-        <h2 class="section-title">Say hello</h2>
-        <p class="section-sub">Recruiting, a collaboration, or just want to chat? My inbox is always open.</p>
+        <h2 class="sec-title">say hello</h2>
+        <p class="sec-intro">Recruiting, a collaboration, or just want to chat? My inbox is always open.</p>
       </div>
       <div class="contact" id="contact-links"></div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>Designed &amp; built by Maheen Niazi</p>
-    <p class="footer-hint">Press <kbd>T</kbd> to switch themes</p>
+    <span>Designed &amp; built by Maheen Niazi</span>
+    <span class="footer-hint">Press <kbd>T</kbd> to switch themes</span>
   </footer>
 
   <script src="data.js"></script>

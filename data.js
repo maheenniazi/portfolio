@@ -10,6 +10,9 @@ const DATA = {
   // Empty slots show a little "add a pic" hint instead.
   photos: {
     about: "assets/photos/me.jpg",
+    // Centerpiece of the hero — ideally a cut-out (transparent PNG) of you or an
+    // avatar/illustration so it floats. Drop it in assets/photos/ and set it here.
+    hero: "",
   },
 
   profile: {
@@ -25,6 +28,7 @@ const DATA = {
     location: "Mississauga, ON",
     email: "maheen.niazi112@gmail.com",
     phone: "(647) 537-0560",
+    heroIntro: "I'm Maheen — a CS & Applied Math student who lives where systems meet design. I build low-latency engines, quant tooling, AI apps and games, mostly from scratch, and love figuring out how things work underneath.",
     links: {
       github: "https://github.com/maheenniazi",
       linkedin: "https://www.linkedin.com/in/maheen-niazi-bb3814342",
