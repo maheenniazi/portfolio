@@ -12,7 +12,7 @@ const DATA = {
     about: "assets/photos/me.jpg",
     // Centerpiece of the hero — ideally a cut-out (transparent PNG) of you or an
     // avatar/illustration so it floats. Drop it in assets/photos/ and set it here.
-    hero: "",
+    hero: "assets/photos/avatar.webp",
   },
 
   profile: {
