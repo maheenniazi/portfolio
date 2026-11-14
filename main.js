@@ -43,7 +43,13 @@
 
     // hero centerpiece
     const av = $("#avatar");
-    if (photos.hero) {
+    const frames = photos.heroFrames;
+    if (frames && frames.front) {
+      av.classList.add("is-cutout");
+      av.innerHTML = ["left", "front", "right", "wink"].map((k) =>
+        `<img class="avatar-frame${k === "front" ? " on" : ""}" data-frame="${k}" src="${frames[k]}" alt="${k === "front" ? "Maheen Niazi" : ""}" ${k === "front" ? "" : 'aria-hidden="true"'} />`
+      ).join("");
+    } else if (photos.hero) {
       av.innerHTML = `<img src="${photos.hero}" alt="Maheen Niazi" />`;
       av.classList.add("is-cutout");
     } else if (photos.about) {
@@ -139,29 +145,47 @@
   }
 
   // ---------------------------------------------------------- cursor parallax + ring
-  function cursor() {
-    if (!finePointer || reduced) return;
-    const dot = $("#cursor-dot"), inner = $("#stage-inner"), avatar = $("#avatar");
-    let tx = 0.5, ty = 0.5, cx = 0.5, cy = 0.5;
-    addEventListener("pointermove", (e) => {
-      dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-      dot.style.opacity = "1";
-      tx = e.clientX / innerWidth; ty = e.clientY / innerHeight;
-      const hot = e.target.closest("a, button, .project, .interest, .contact-card, .skill-tag");
-      dot.style.width = dot.style.height = hot ? "48px" : "30px";
-      dot.style.margin = hot ? "-24px 0 0 -24px" : "-15px 0 0 -15px";
-      dot.classList.toggle("on-block", !!e.target.closest(".project, .interest, .contact-card, .skill-tag, .project-toggle, .edu-card, .tag, .photo-frame"));
-    });
-    addEventListener("pointerdown", () => (dot.style.width = dot.style.height = "22px"));
-    function frame() {
+  // the head + eyes follow the cursor: swap angle frames and tilt the whole bust
+  function headTracking() {
+    const inner = $("#stage-inner"), avatar = $("#avatar");
+    const fr = {};
+    $$(".avatar-frame", avatar).forEach((n) => (fr[n.dataset.frame] = n));
+    const hasFrames = fr.front && fr.left && fr.right;
+    let tx = 0.5, ty = 0.5, cx = 0.5, cy = 0.5, winking = false, cur = "front";
+
+    const show = (k) => {
+      if (winking || cur === k || !fr[k]) return;
+      cur = k;
+      Object.entries(fr).forEach(([n, el]) => el.classList.toggle("on", n === k));
+    };
+    const wink = () => {
+      if (!fr.wink || winking) return;
+      winking = true;
+      const prev = cur;
+      Object.entries(fr).forEach(([n, el]) => el.classList.toggle("on", n === "wink"));
+      setTimeout(() => { winking = false; cur = "__"; show(prev); }, 260);
+    };
+
+    if (finePointer && !reduced) {
+      addEventListener("pointermove", (e) => { tx = e.clientX / innerWidth; ty = e.clientY / innerHeight; });
+    }
+    // a wink on click, and a soft auto-blink now and then
+    if (hasFrames && !reduced) {
+      $("#top").addEventListener("click", (e) => { if (e.target.closest(".avatar, .stage-inner")) wink(); });
+      const loop = () => { wink(); setTimeout(loop, 6000 + Math.random() * 6000); };
+      setTimeout(loop, 4500);
+    }
+
+    function raf() {
       cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
-      const dx = (cx - 0.5), dy = (cy - 0.5);
-      if (inner) inner.style.transform = `translate(${dx * 26}px, ${dy * 20}px)`;
-      if (avatar) avatar.style.transform = `rotateY(${dx * 10}deg) rotateX(${-dy * 10}deg) translateZ(0)`;
-      requestAnimationFrame(frame);
+      const dx = cx - 0.5, dy = cy - 0.5;
+      if (inner) inner.style.transform = `translate(${dx * 24}px, ${dy * 18}px)`;
+      if (avatar) avatar.style.transform = `rotateY(${dx * 12}deg) rotateX(${-dy * 10}deg)`;
+      if (hasFrames) show(dx < -0.12 ? "left" : dx > 0.12 ? "right" : "front");
+      requestAnimationFrame(raf);
     }
     if (avatar) avatar.style.transformStyle = "preserve-3d";
-    frame();
+    if (finePointer && !reduced) raf();
   }
 
   // reveal on scroll
@@ -245,6 +269,6 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    render(); reveals(); theme(); cursor(); achievements(); hud();
+    render(); reveals(); theme(); headTracking(); achievements(); hud();
   });
 })();
