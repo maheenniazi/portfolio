@@ -13,6 +13,13 @@ const DATA = {
     // Centerpiece of the hero — ideally a cut-out (transparent PNG) of you or an
     // avatar/illustration so it floats. Drop it in assets/photos/ and set it here.
     hero: "assets/photos/avatar.webp",
+    // Multi-angle frames for the cursor-tracking head (front/left/right + a wink)
+    heroFrames: {
+      front: "assets/photos/avatar-front.webp",
+      left: "assets/photos/avatar-left.webp",
+      right: "assets/photos/avatar-right.webp",
+      wink: "assets/photos/avatar-wink.webp",
+    },
   },
 
   profile: {
