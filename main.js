@@ -47,7 +47,7 @@
     if (frames && frames.front) {
       av.classList.add("is-cutout");
       // front frame drives the smooth tilt; wink overlays on click/blink
-      av.innerHTML = ["front", "wink"].filter((k) => frames[k]).map((k) =>
+      av.innerHTML = ["front", "left", "right", "wink"].filter((k) => frames[k]).map((k) =>
         `<img class="avatar-frame${k === "front" ? " on" : ""}" data-frame="${k}" src="${frames[k]}" alt="${k === "front" ? "Maheen Niazi" : ""}" ${k === "front" ? "" : 'aria-hidden="true"'} />`
       ).join("");
     } else if (photos.hero) {
@@ -148,20 +148,20 @@
   // ---------------------------------------------------------- cursor parallax + ring
   // the head leans/turns toward the cursor — driven continuously every frame
   // (smooth, no discrete frame-swapping), with a wink on click + auto-blink.
-  function headTracking() {
+    function headTracking() {
     const inner = $("#stage-inner"), avatar = $("#avatar");
     const fr = {};
     $$(".avatar-frame", avatar).forEach((n) => (fr[n.dataset.frame] = n));
     const front = fr.front, wink = fr.wink;
     if (!front) return;
 
-    // only the front frame drives the motion; the extra angles aren't needed for a smooth tilt
-    [fr.left, fr.right].forEach((n) => n && (n.style.display = "none"));
-    $$(".avatar-frame", avatar).forEach((n) => (n.style.transition = "none"));
+    // opacity is driven every frame for a smooth crossfade gaze, so drop the CSS transition
+    $$(".avatar-frame", avatar).forEach((n) => { n.style.transition = "none"; n.style.display = ""; });
     front.style.opacity = "1";
-    if (wink) wink.style.opacity = "0";
+    [fr.left, fr.right, wink].forEach((n) => n && (n.style.opacity = "0"));
 
-    let tx = 0, ty = 0, sx = 0, sy = 0, winkUntil = 0;
+    let tx = 0, ty = 0, sx = 0, sy = 0, winkUntil = 0, funStart = 0, funUntil = 0;
+    const FUN_MS = 820;
     if (finePointer && !reduced) {
       addEventListener("pointermove", (e) => {
         tx = (e.clientX / innerWidth - 0.5) * 2;   // -1 … 1
@@ -169,24 +169,51 @@
       });
     }
     const doWink = () => { if (wink) winkUntil = performance.now() + 300; };
-    if (wink && !reduced) {
+    const doFunny = () => {                                     // click → hop + 360° spin + wink
+      funStart = performance.now();
+      funUntil = funStart + FUN_MS;
+      winkUntil = funUntil;
+    };
+    if (!reduced) {
       const stage = $("#stage");
       stage.style.cursor = "pointer";
-      stage.addEventListener("pointerdown", (e) => { if (e.target.closest(".avatar")) doWink(); });
-      const blink = () => { doWink(); setTimeout(blink, 5000 + Math.random() * 6000); };
-      setTimeout(blink, 5000);
+      stage.addEventListener("pointerdown", (e) => { if (e.target.closest(".avatar")) doFunny(); });
+      if (wink) { const blink = () => { doWink(); setTimeout(blink, 5000 + Math.random() * 6000); }; setTimeout(blink, 5000); }
     }
 
-    if (avatar) { avatar.style.transformStyle = "preserve-3d"; avatar.style.willChange = "transform"; }
+    avatar.style.transformStyle = "preserve-3d";
+    avatar.style.willChange = "transform";
+
     function raf() {
+      const now = performance.now();
       sx += (tx - sx) * 0.1; sy += (ty - sy) * 0.1;            // easing = smooth
-      if (inner) inner.style.transform = `translate(${sx * 18}px, ${sy * 12}px)`;
-      // the head drifts around toward the cursor (translate) while also turning to look at it (rotate)
-      if (avatar) avatar.style.transform = `translate(${sx * 55}px, ${sy * 40}px) rotateY(${sx * 15}deg) rotateX(${-sy * 9}deg)`;
-      if (wink) {
-        const w = performance.now() < winkUntil;
-        wink.style.opacity = w ? "1" : "0";
-        front.style.opacity = w ? "0" : "1";
+      if (inner) inner.style.transform = `translate(${sx * 14}px, ${sy * 10}px)`;
+
+      // head follows the cursor: drift toward it + turn to look at it
+      let t = `translate(${sx * 42}px, ${sy * 30}px) rotateY(${sx * 16}deg) rotateX(${-sy * 10}deg)`;
+
+      // click reaction: a little hop + full spin + squash-and-stretch
+      const funny = now < funUntil;
+      if (funny) {
+        const f = (now - funStart) / FUN_MS;                   // 0 … 1
+        const spin = 360 * (1 - Math.pow(1 - f, 3));           // ease-out spin
+        const hop = -Math.sin(f * Math.PI) * 48;               // up, then back down
+        const pop = 1 + Math.sin(f * Math.PI) * 0.16;          // grow, then settle
+        t += ` translateY(${hop}px) rotate(${spin}deg) scale(${pop})`;
+      }
+      avatar.style.transform = t;
+
+      // eyes/gaze: crossfade front <-> left/right by cursor x (winks during blink + click)
+      const winking = wink && now < winkUntil;
+      if (winking) {
+        ["front", "left", "right"].forEach((k) => fr[k] && (fr[k].style.opacity = "0"));
+        wink.style.opacity = "1";
+      } else {
+        const r = clamp(sx * 1.4, 0, 1), l = clamp(-sx * 1.4, 0, 1);
+        if (fr.right) fr.right.style.opacity = r.toFixed(3);
+        if (fr.left) fr.left.style.opacity = l.toFixed(3);
+        front.style.opacity = (1 - Math.max(r, l)).toFixed(3);
+        if (wink) wink.style.opacity = "0";
       }
       requestAnimationFrame(raf);
     }
