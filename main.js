@@ -181,8 +181,8 @@
     function raf() {
       sx += (tx - sx) * 0.1; sy += (ty - sy) * 0.1;            // easing = smooth
       if (inner) inner.style.transform = `translate(${sx * 18}px, ${sy * 12}px)`;
-      // cursor right -> head turns to its right (looks toward the cursor)
-      if (avatar) avatar.style.transform = `rotateY(${sx * 15}deg) rotateX(${-sy * 9}deg)`;
+      // the head drifts around toward the cursor (translate) while also turning to look at it (rotate)
+      if (avatar) avatar.style.transform = `translate(${sx * 55}px, ${sy * 40}px) rotateY(${sx * 15}deg) rotateX(${-sy * 9}deg)`;
       if (wink) {
         const w = performance.now() < winkUntil;
         wink.style.opacity = w ? "1" : "0";
