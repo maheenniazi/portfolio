@@ -115,7 +115,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .meta-right { top: 50%; right: clamp(10px, 1.6vw, 22px); transform: translateY(-50%) rotate(90deg); transform-origin: right center; }
 .meta-bl { bottom: clamp(20px, 3.4vw, 40px); left: var(--gutter); }
 
-.stage { position: relative; z-index: 3; width: 100%; display: grid; place-items: center; text-align: center; padding: 0 var(--gutter); }
+.stage { position: relative; z-index: 3; width: 100%; display: grid; place-items: center; text-align: center; padding: 0 var(--gutter); transform: translateY(-5vh); }
 .stage-inner { position: relative; display: grid; place-items: center; will-change: transform; }
 .avatar {
   width: clamp(260px, 42vh, 460px); aspect-ratio: 3 / 3.4; display: grid; place-items: center;
@@ -139,7 +139,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero-title {
   position: relative; z-index: 4; margin-top: -0.62em;
   font-family: var(--hand); font-weight: 600; color: var(--on-canvas);
-  font-size: clamp(3rem, 11vw, 7.4rem); line-height: 0.9; letter-spacing: 0.01em;
+  font-size: clamp(2rem, 8.5vw, 7.4rem); line-height: 0.9; letter-spacing: 0.01em; max-width: 100%;
   text-shadow: 0 4px 26px rgba(0, 0, 0, 0.42), 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 .hero-intro {
@@ -281,6 +281,8 @@ kbd { font-family: var(--sans); letter-spacing: 0; text-transform: none; font-si
 }
 @media (max-width: 600px) {
   .meta-right { display: none; }
+  .avatar.is-cutout { height: clamp(260px, 44vh, 380px); }
+  .stage-inner, .hero-intro { max-width: 100%; }
   .meta { font-size: 0.64rem; letter-spacing: 0.2em; }
   .tl-item { grid-template-columns: 1fr; }
   .tl-date { text-align: left; }
