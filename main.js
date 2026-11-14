@@ -148,20 +148,22 @@
   // ---------------------------------------------------------- cursor parallax + ring
   // the head leans/turns toward the cursor — driven continuously every frame
   // (smooth, no discrete frame-swapping), with a wink on click + auto-blink.
-    function headTracking() {
+  function headTracking() {
     const inner = $("#stage-inner"), avatar = $("#avatar");
     const fr = {};
     $$(".avatar-frame", avatar).forEach((n) => (fr[n.dataset.frame] = n));
     const front = fr.front, wink = fr.wink;
     if (!front) return;
 
-    // opacity is driven every frame for a smooth crossfade gaze, so drop the CSS transition
-    $$(".avatar-frame", avatar).forEach((n) => { n.style.transition = "none"; n.style.display = ""; });
+    // one frame turns in 3D (smooth, continuous) — no frame-swap "slideshow".
+    // the left/right stills aren't used for the turn; wink overlays for blinks + click.
+    [fr.left, fr.right].forEach((n) => n && (n.style.display = "none"));
+    $$(".avatar-frame", avatar).forEach((n) => (n.style.transition = "none"));
     front.style.opacity = "1";
-    [fr.left, fr.right, wink].forEach((n) => n && (n.style.opacity = "0"));
+    if (wink) wink.style.opacity = "0";
 
     let tx = 0, ty = 0, sx = 0, sy = 0, winkUntil = 0, funStart = 0, funUntil = 0;
-    const FUN_MS = 820;
+    const FUN_MS = 900;
     if (finePointer && !reduced) {
       addEventListener("pointermove", (e) => {
         tx = (e.clientX / innerWidth - 0.5) * 2;   // -1 … 1
@@ -169,7 +171,7 @@
       });
     }
     const doWink = () => { if (wink) winkUntil = performance.now() + 300; };
-    const doFunny = () => {                                     // click → hop + 360° spin + wink
+    const doFunny = () => {                                     // click → hop + full 360° spin + wink
       funStart = performance.now();
       funUntil = funStart + FUN_MS;
       winkUntil = funUntil;
@@ -186,34 +188,29 @@
 
     function raf() {
       const now = performance.now();
-      sx += (tx - sx) * 0.1; sy += (ty - sy) * 0.1;            // easing = smooth
-      if (inner) inner.style.transform = `translate(${sx * 14}px, ${sy * 10}px)`;
+      sx += (tx - sx) * 0.09; sy += (ty - sy) * 0.09;          // eased = smooth, no jumps
+      if (inner) inner.style.transform = `translate(${sx * 12}px, ${sy * 9}px)`;
 
-      // head follows the cursor: drift toward it + turn to look at it
-      let t = `translate(${sx * 42}px, ${sy * 30}px) rotateY(${sx * 16}deg) rotateX(${-sy * 10}deg)`;
+      // head TURNS in 3D to follow the cursor (continuous rotation, not a crossfade)
+      const ry = sx * 32, rx = -sy * 18;                       // yaw / pitch toward cursor
+      const tX = sx * 30, tY = sy * 22;                        // slight drift with it
+      let hop = 0, pop = 1, rz = 0;
 
-      // click reaction: a little hop + full spin + squash-and-stretch
+      // click reaction: a hop + full 360° twirl + squash-and-stretch
       const funny = now < funUntil;
       if (funny) {
         const f = (now - funStart) / FUN_MS;                   // 0 … 1
-        const spin = 360 * (1 - Math.pow(1 - f, 3));           // ease-out spin
-        const hop = -Math.sin(f * Math.PI) * 48;               // up, then back down
-        const pop = 1 + Math.sin(f * Math.PI) * 0.16;          // grow, then settle
-        t += ` translateY(${hop}px) rotate(${spin}deg) scale(${pop})`;
+        rz = 360 * (1 - Math.pow(1 - f, 3));                   // ease-out in-plane spin (always visible)
+        hop = -Math.sin(f * Math.PI) * 54;                     // up, then back down
+        pop = 1 + Math.sin(f * Math.PI) * 0.16;                // grow, then settle
       }
-      avatar.style.transform = t;
+      avatar.style.transform =
+        `translate(${tX}px, ${tY + hop}px) rotateY(${ry}deg) rotateX(${rx}deg) rotate(${rz}deg) scale(${pop})`;
 
-      // eyes/gaze: crossfade front <-> left/right by cursor x (winks during blink + click)
-      const winking = wink && now < winkUntil;
-      if (winking) {
-        ["front", "left", "right"].forEach((k) => fr[k] && (fr[k].style.opacity = "0"));
-        wink.style.opacity = "1";
-      } else {
-        const r = clamp(sx * 1.4, 0, 1), l = clamp(-sx * 1.4, 0, 1);
-        if (fr.right) fr.right.style.opacity = r.toFixed(3);
-        if (fr.left) fr.left.style.opacity = l.toFixed(3);
-        front.style.opacity = (1 - Math.max(r, l)).toFixed(3);
-        if (wink) wink.style.opacity = "0";
+      if (wink) {
+        const w = now < winkUntil;
+        wink.style.opacity = w ? "1" : "0";
+        front.style.opacity = w ? "0" : "1";
       }
       requestAnimationFrame(raf);
     }
