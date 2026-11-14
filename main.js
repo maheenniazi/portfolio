@@ -46,7 +46,8 @@
     const frames = photos.heroFrames;
     if (frames && frames.front) {
       av.classList.add("is-cutout");
-      av.innerHTML = ["left", "front", "right", "wink"].map((k) =>
+      // front frame drives the smooth tilt; wink overlays on click/blink
+      av.innerHTML = ["front", "wink"].filter((k) => frames[k]).map((k) =>
         `<img class="avatar-frame${k === "front" ? " on" : ""}" data-frame="${k}" src="${frames[k]}" alt="${k === "front" ? "Maheen Niazi" : ""}" ${k === "front" ? "" : 'aria-hidden="true"'} />`
       ).join("");
     } else if (photos.hero) {
@@ -145,47 +146,51 @@
   }
 
   // ---------------------------------------------------------- cursor parallax + ring
-  // the head + eyes follow the cursor: swap angle frames and tilt the whole bust
+  // the head leans/turns toward the cursor — driven continuously every frame
+  // (smooth, no discrete frame-swapping), with a wink on click + auto-blink.
   function headTracking() {
     const inner = $("#stage-inner"), avatar = $("#avatar");
     const fr = {};
     $$(".avatar-frame", avatar).forEach((n) => (fr[n.dataset.frame] = n));
-    const hasFrames = fr.front && fr.left && fr.right;
-    let tx = 0.5, ty = 0.5, cx = 0.5, cy = 0.5, winking = false, cur = "front";
+    const front = fr.front, wink = fr.wink;
+    if (!front) return;
 
-    const show = (k) => {
-      if (winking || cur === k || !fr[k]) return;
-      cur = k;
-      Object.entries(fr).forEach(([n, el]) => el.classList.toggle("on", n === k));
-    };
-    const wink = () => {
-      if (!fr.wink || winking) return;
-      winking = true;
-      const prev = cur;
-      Object.entries(fr).forEach(([n, el]) => el.classList.toggle("on", n === "wink"));
-      setTimeout(() => { winking = false; cur = "__"; show(prev); }, 260);
-    };
+    // only the front frame drives the motion; the extra angles aren't needed for a smooth tilt
+    [fr.left, fr.right].forEach((n) => n && (n.style.display = "none"));
+    $$(".avatar-frame", avatar).forEach((n) => (n.style.transition = "none"));
+    front.style.opacity = "1";
+    if (wink) wink.style.opacity = "0";
 
+    let tx = 0, ty = 0, sx = 0, sy = 0, winkUntil = 0;
     if (finePointer && !reduced) {
-      addEventListener("pointermove", (e) => { tx = e.clientX / innerWidth; ty = e.clientY / innerHeight; });
+      addEventListener("pointermove", (e) => {
+        tx = (e.clientX / innerWidth - 0.5) * 2;   // -1 … 1
+        ty = (e.clientY / innerHeight - 0.5) * 2;
+      });
     }
-    // a wink on click, and a soft auto-blink now and then
-    if (hasFrames && !reduced) {
-      $("#top").addEventListener("click", (e) => { if (e.target.closest(".avatar, .stage-inner")) wink(); });
-      const loop = () => { wink(); setTimeout(loop, 6000 + Math.random() * 6000); };
-      setTimeout(loop, 4500);
+    const doWink = () => { if (wink) winkUntil = performance.now() + 300; };
+    if (wink && !reduced) {
+      const stage = $("#stage");
+      stage.style.cursor = "pointer";
+      stage.addEventListener("pointerdown", (e) => { if (e.target.closest(".avatar")) doWink(); });
+      const blink = () => { doWink(); setTimeout(blink, 5000 + Math.random() * 6000); };
+      setTimeout(blink, 5000);
     }
 
+    if (avatar) { avatar.style.transformStyle = "preserve-3d"; avatar.style.willChange = "transform"; }
     function raf() {
-      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
-      const dx = cx - 0.5, dy = cy - 0.5;
-      if (inner) inner.style.transform = `translate(${dx * 24}px, ${dy * 18}px)`;
-      if (avatar) avatar.style.transform = `rotateY(${dx * 12}deg) rotateX(${-dy * 10}deg)`;
-      if (hasFrames) show(dx < -0.12 ? "left" : dx > 0.12 ? "right" : "front");
+      sx += (tx - sx) * 0.1; sy += (ty - sy) * 0.1;            // easing = smooth
+      if (inner) inner.style.transform = `translate(${sx * 18}px, ${sy * 12}px)`;
+      // cursor right -> head turns to its right (looks toward the cursor)
+      if (avatar) avatar.style.transform = `rotateY(${sx * 15}deg) rotateX(${-sy * 9}deg)`;
+      if (wink) {
+        const w = performance.now() < winkUntil;
+        wink.style.opacity = w ? "1" : "0";
+        front.style.opacity = w ? "0" : "1";
+      }
       requestAnimationFrame(raf);
     }
-    if (avatar) avatar.style.transformStyle = "preserve-3d";
-    if (finePointer && !reduced) raf();
+    if (!reduced) raf();
   }
 
   // reveal on scroll
